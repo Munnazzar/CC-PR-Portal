@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Competition Timings Panel - Dev Day '24</title>
+    <!-- Importing the Font Awesome Kit -->
+    <script src="https://kit.fontawesome.com/yourkit.js"></script>
+    <!-- External stylesheet link -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'adminPanelStyles.css' %}" />
+</head>
+
+<body>
+    <div style="height: 10px;"></div>
+
+    <!-- Nav Bar -->
+    <div class="navigator-wrapper">
+        <ul>
+            <li class="attendance-toggle"><a href="{% url 'portal:admin-panel' %}">Attendance</a></li>
+            <li class="time-schedule-toggle"><a class="active">Time Schedule</a></li>
+        </ul>
+    </div>
+
+    <!-- Logo for small screens -->
+    <div class="row">
+        <img class="logo-small-screen" src="{% static '/img/DD24_Logo_With_Tagline.png' %}" width="25%"></img>
+    </div>
+
+    <!-- Header -->
+    <div class="header-row" style="justify-content: space-between;">
+
+        <img class="logo-wide-screen" src="{% static '/img/DD24_Logo_With_Tagline.png' %}" width="25%"></img>
+
+        <div class="heading">
+            <h1>
+                Time Schedule Admin Panel
+            </h1>
+        </div>
+
+        <div style="display:flex; width: 25%; height: 100%; justify-content: end; align-items: center;">
+            <div style="width: 100px; height: 100%;">
+                <form action="{% url 'portal:logout' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-button">Logout</button>
+                </form>
+            </div>
+        </div>
+
+
+    </div>
+
+    <!-- Search Bar -->
+    <form id="schedule-search-form">
+        {% csrf_token %}
+        
+        <div class="row">
+            <div class="search_field">
+                <svg xmlns="http://www.w3.org/2000/svg" class="svg_icon bi-search" viewBox="0 0 16 16">
+                    <path
+                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z">
+                    </path>
+                </svg>
+                    <input id="schedule-search" class="input-schedule-search" type="text" placeholder="Search">
+                
+            </div>
+        </div>
+
+        <!-- Search Button -->
+        <div class="row">
+            <button type="submit" class="search-button" onclick="getCompetitionTime()">Search</button>
+        </div>
+    </form>
+    <!-- Query table -->
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Competition Name</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Update</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+         document.addEventListener("DOMContentLoaded", function() {
+            fetch('/api/get_time/')
+                .then(response => response.json())
+                .then(data => {
+                    const tbody = document.querySelector('tbody');
+                    tbody.innerHTML=''
+                    data.forEach(item => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <tr>
+                                <td>${item.competitionName}</td>
+                                <td>
+                                    <input type="time" id="${item.competitionName}-start" value="${item.start_time}">
+                                </td>
+                                <td>
+                                    <input type="time" id="${item.competitionName}-end" value="${item.end_time}">
+                                </td>
+                                <td>
+                                    <button id="${item.competitionName}-btn" onclick="updateTime(this)">
+                                        Change
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching records:', error);
+                });
+        });
+
+    const form = document.getElementById('schedule-search-form');    
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        getCompetitionTime();
+    })
+
+    async function getCompetitionTime(){
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const competitionName = document.getElementById('schedule-search').value;
+        try {
+            const response = await fetch('/api/post_search_schedule/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify({ search : competitionName})
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                const tbody = document.querySelector('tbody');
+                tbody.innerHTML = '';
+                data.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                            <tr>
+                                <td>${item.competitionName}</td>
+                                <td>
+                                    <input type="time" id="${item.competitionName}-start" value="${item.start_time}">
+                                </td>
+                                <td>
+                                    <input type="time" id="${item.competitionName}-end" value="${item.end_time}">
+                                </td>
+                                <td>
+                                    <button id="${item.competitionName}-btn" onclick="updateTime(this)">
+                                        Change
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                    tbody.appendChild(row);
+                });    
+            } else {
+                console.error('Error:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    function updateTime(selectElement){
+        const competitionName = selectElement.getAttribute('id').split("-btn")[0];
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        startTime= document.getElementById(competitionName+"-start").value
+        endTime= document.getElementById(competitionName+"-end").value
+        fetch('/api/update_time/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken 
+        },
+        body: JSON.stringify({ competition: competitionName, startTime: startTime, endTime: endTime })
+        })
+       .then(response => {
+        if (response.ok) {
+            alert("Time updated succesfully.")
+            console.log('Time updated successfully.');
+        } else {
+            console.error('Error updating time:', response.statusText);
+        }
+        })
+        .catch(error => {
+        console.error('Error updating time:', error);
+        });
+    }
+    </script>
+</body>
+</html>
