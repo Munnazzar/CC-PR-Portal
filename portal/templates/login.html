@@ -1,51 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DevDay Login Page</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'loginStyles.css' %}" />
-  </head>
-  <body>
-    <div class="background-text">
-      <span>DREAM DEVELOP</span>
-      <span>DELIVER</span>
-    </div>
-    <div class="login-container">
-      <div class="login-box">
-        <div class="haha">
-          <img src="{% static '/img/DD24_Logo_With_Tagline.png' %}" alt="DevDay Logo" class="logo" />
-          <h2 class="login-heading">Login</h2>
-        </div>
-        <form action="" method="POST">
-          {% csrf_token %}
-          <div class="form-group">
-            <label for="username" class="label">Username</label>
-            <input type="username" id="email" name="username"
-              class="input-field"
-              placeholder="Enter your username"
-            />
-          </div>
-          <div class="form-group">
-            <label for="password" class="label">Password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              class="input-field"
-              placeholder="Enter your password"
-            />
-          </div>
-          <div class="hehe">
-            <button type="submit" class="submit-button">Submit</button>
-          </div>
-        </form>
-        {% if msg %}
-            <p style="color: red;">{{ msg }}</p>
-        {% endif %}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+  <title>DevDay Login</title>
+{% endblock %}
+
+{% block extra_header %}
+  <link rel="stylesheet" href="{% static 'css/loginStyles.css' %}" />
+{% endblock %}
+
+{% block body %}
+  <div class="container">
+    <div class="box">
+      <div class="haha">
+        <img src="{% static '/img/DD24_Logo_With_Tagline.png' %}" alt="DevDay Logo" class="logo" />
+        <h2 class="login-heading">Login</h2>
       </div>
+      <form action="{% url 'portal:login-page' %}" method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="{{ login_form.username.id_for_label }}" class="label">{{ login_form.username.label|title }}</label>
+          {{ login_form.username }}
+        </div>
+        <div class="form-group">
+          <label for="{{ login_form.password.id_for_label }}" class="label">{{ login_form.password.label|title }}</label>
+          {{ login_form.password }}
+        </div>
+        {% if msg %}
+          <div class="alert alert-warning" role="alert">{{ msg }}</div>
+        {% endif %}
+        <div class="hehe">
+          <button type="submit" class="submit-button">Submit</button>
+        </div>
+      </form>
     </div>
-    
-  </body>
-</html>
+  </div>
+{% endblock %}

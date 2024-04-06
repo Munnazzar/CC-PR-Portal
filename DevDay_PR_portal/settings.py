@@ -71,6 +71,11 @@ DATABASES = {
         "NAME": BASE_DIR / "accounts.sqlite3",
     }
 }
+USERNAME = "wasox73071"
+PASSWORD = "EUv3sufHGPRWBxvu"
+DATABASE_HOST = "cluster0.zsbl4yo.mongodb.net"
+DATABASE_NAME = "DevDay"
+
 # Secondary Database
 connect(host=f"mongodb+srv://{USERNAME}:{PASSWORD}@{DATABASE_HOST}/{DATABASE_NAME}")
 
