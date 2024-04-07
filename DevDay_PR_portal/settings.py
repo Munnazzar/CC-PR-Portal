@@ -14,9 +14,9 @@ SECRET_KEY = "Ji3wq8a02#545az*04k34cGHKJFHKAFOyuahrf3829-u%zebb*_50wqx$6kmn3!x81
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = ["*"]
-
+ALLOWED_HOSTS = [".herokuapp.com"]
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 # Application definition
 
