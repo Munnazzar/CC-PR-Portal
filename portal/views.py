@@ -30,7 +30,7 @@ def loginPage(request):
             message = "Invalid username or password."
     return render(request, "login.html", {"login_form": login_form, "msg": message})
 
-
+@login_required(login_url="portal:login-page")
 def logout_view(request):
     logout(request)
     return redirect("portal:login-page")
@@ -41,7 +41,7 @@ def adminPanel(request):
     return render(
         request,
         "adminPanel.html",
-        {"count": DevDayAttendence.objects.count(), "events": Event.objects.all()},
+        {"count": DevDayAttendance.objects.count(), "events": Event.objects.all()},
     )
 
 
@@ -50,3 +50,10 @@ def adminPanelSchedule(request):
     if not request.user.is_superuser:
         return redirect("portal:admin-panel")
     return render(request, "adminPanelSchedule.html")
+
+def page_not_found_404(request, exception=404):
+    return render(
+        request,
+        "404.html",
+        status=404,
+    )

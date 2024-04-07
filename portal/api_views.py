@@ -1,12 +1,17 @@
 from rest_framework.response import Response
+from rest_framework import status
 from rest_framework.decorators import api_view
-from bson import ObjectId 
+from bson import ObjectId
 import json
 from django.shortcuts import HttpResponse
-from .models import DevDayAttendence,Attendance,Event
+from .models import DevDayAttendance, Attendance, Event
 from datetime import datetime
-@api_view(['GET'])
-def get_time(request):    
+from django.contrib.auth.decorators import login_required
+
+
+@api_view(["GET"])
+@login_required(login_url="portal:login-page")
+def get_time(request):
     query = Event.objects.all()
     data = []
     for record in query:
@@ -17,16 +22,18 @@ def get_time(request):
             if isinstance(value, ObjectId):
                 record_dict[key] = str(value)
         data.append(record_dict)
-    return HttpResponse(json.dumps(data), content_type="application/json")
+    return Response(data, status=status.HTTP_200_OK)
 
-@api_view(['POST'])
-def post_search_schedule(request):
-    search_query = request.data.get('search')
-    if search_query is not None:
+
+@api_view(["GET"])
+@login_required(login_url="portal:login-page")
+def search_schedule(request, competitionName):
+    search_query = competitionName
+    if search_query != "all_competitions":
         records = Event.objects.filter(competitionName__icontains=search_query)
     else:
         records = Event.objects.all()
-    
+
     data = []
     for record in records:
         record_dict = record.to_mongo().to_dict()
@@ -36,124 +43,114 @@ def post_search_schedule(request):
             if isinstance(value, ObjectId):
                 record_dict[key] = str(value)
         data.append(record_dict)
-    return HttpResponse(json.dumps(data), content_type="application/json")
+    return Response(data, status=status.HTTP_200_OK)
 
-@api_view(['POST'])
+
+@api_view(["POST"])
+@login_required(login_url="portal:login-page")
 def update_time(request):
     data = request.data
-    competitionName = data['competition']  
-    startTime= data['startTime']
-    endTime= data['endTime']
-    
+    competitionName = data["competition"]
+    startTime = data["startTime"]
+    endTime = data["endTime"]
+
+    if startTime >= endTime:
+        return Response(
+            {"Status": "Start time must be less than end time."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
     try:
-        startTime= datetime.strptime(startTime, '%H:%M')
-        endTime= datetime.strptime(endTime, '%H:%M')
+        startTime = datetime.strptime(startTime, "%H:%M")
+        endTime = datetime.strptime(endTime, "%H:%M")
 
         compObj = Event.objects.get(competitionName=competitionName)
-        date= compObj.start_time.date()
+        date = compObj.start_time.date()
 
-        compObj.start_time= datetime.combine(date, startTime.time())
-        compObj.end_time= datetime.combine(date, endTime.time())
+        compObj.start_time = datetime.combine(date, startTime.time())
+        compObj.end_time = datetime.combine(date, endTime.time())
         compObj.save()
-        return Response({'Status':"Successsfullyy updated"})
+        return Response(
+            {"Status": "Successsfullyy updated"},
+            status=status.HTTP_200_OK,
+        )
     except:
-        return Response({'Status':"Error occured changing time"})
-    
+        return Response(
+            {"Status": "Error occurred changing time."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
-@api_view(['GET'])
-def get_rec(request):    
-    query = DevDayAttendence.objects.all()
+
+@api_view(["GET"])
+@login_required(login_url="portal:login-page")
+def get_rec(request):
+    query = DevDayAttendance.objects.all()
     data = []
     for record in query:
         record_dict = record.to_mongo().to_dict()
         for key, value in record_dict.items():
             if isinstance(value, ObjectId):
                 record_dict[key] = str(value)
-        team_name= record_dict["team_name"]
+        team_name = record_dict["Team_Name"]
         try:
-            AttendanceObj= Attendance.objects.get(teamName=team_name)
-            record_dict["attendance"]= AttendanceObj.attendanceStatus
+            AttendanceObj = Attendance.objects.get(teamName=team_name)
+            record_dict["attendance"] = AttendanceObj.attendanceStatus
         except:
-            record_dict["attendance"]= False
+            record_dict["attendance"] = False
         data.append(record_dict)
-    return HttpResponse(json.dumps(data), content_type="application/json")
-    
-@api_view(['POST'])
-def post_rec_search(request):
-    search_query = request.data.get('search')
-    competition_query= request.data.get('competition')
-    if search_query is not None:
-        if competition_query=="All competitions": 
-            records = DevDayAttendence.objects.filter(team_name__icontains=search_query)
+    return Response(data, status=status.HTTP_200_OK)
+
+
+@api_view(["GET"])
+@login_required(login_url="portal:login-page")
+def record_search(request, competitionName, searchValue):
+    search_query = searchValue
+    competition_query = competitionName
+
+    if search_query != "all":
+        if competition_query == "all_competitions":
+            records = DevDayAttendance.objects.filter(Team_Name__icontains=search_query)
         else:
-            records = DevDayAttendence.objects.filter(team_name__icontains=search_query, comp_name= competition_query)
+            records = DevDayAttendance.objects.filter(
+                Team_Name__icontains=search_query, Competition=competition_query
+            )
     else:
-        if competition_query=="All competitions": 
-            records = DevDayAttendence.objects.all()
+        if competition_query == "all_competitions":
+            records = DevDayAttendance.objects.all()
         else:
-            records = DevDayAttendence.objects.filter(comp_name= competition_query)
-        
-    # else:
-    #     return Response({"message": "Only POST method is allowed"})
+            records = DevDayAttendance.objects.filter(Competition=competition_query)
     data = []
     for record in records:
         record_dict = record.to_mongo().to_dict()
         for key, value in record_dict.items():
             if isinstance(value, ObjectId):
                 record_dict[key] = str(value)
-        team_name= record_dict["team_name"]
+        team_name = record_dict["Team_Name"]
         try:
-            AttendanceObj= Attendance.objects.get(teamName=team_name)
-            record_dict["attendance"]= AttendanceObj.attendanceStatus
+            AttendanceObj = Attendance.objects.get(teamName=team_name)
+            record_dict["attendance"] = AttendanceObj.attendanceStatus
         except:
-            record_dict["attendance"]= False
+            record_dict["attendance"] = False
         data.append(record_dict)
+    return Response(data, status=status.HTTP_200_OK)
 
-    return HttpResponse(json.dumps(data), content_type="application/json")
 
-@api_view(['POST'])
-def post_rec_dropdown(request):
-    competition = request.data.get("competition")  
-    if competition == "All Competitions":
-        records = DevDayAttendence.objects.all()
-    elif competition is not None:
-        records = DevDayAttendence.objects.filter(comp_name=competition)
-    else:
-        records = DevDayAttendence.objects.none()
-
-    data = []
-    for record in records:
-        record_dict = record.to_mongo().to_dict()
-        for key, value in record_dict.items():
-            if isinstance(value, ObjectId):
-                record_dict[key] = str(value)
-        team_name= record_dict["team_name"]
-        try:
-            AttendanceObj= Attendance.objects.get(teamName=team_name)
-            record_dict["attendance"]= AttendanceObj.attendanceStatus
-        except:
-            record_dict["attendance"]= False
-        data.append(record_dict)
-
-    return HttpResponse(json.dumps(data), content_type="application/json")
-@api_view(['POST'])
+@api_view(["POST"])
+@login_required(login_url="portal:login-page")
 def mark(request):
     received_data = request.data
     status = received_data["status"]
-    team_name=received_data["team"]
+    team_name = received_data["team"]
 
     if status == "present":
         attendance = True
     else:
-        attendance = False   
+        attendance = False
     try:
-        attendanceObj = Attendance.objects.get(teamName=team_name)                
+        attendanceObj = Attendance.objects.get(teamName=team_name)
         attendanceObj.attendanceStatus = attendance
         attendanceObj.save()
     except Attendance.DoesNotExist:
         attendanceObj = Attendance(teamName=team_name, attendanceStatus=attendance)
         attendanceObj.save()
-    return Response({'Status':"Successsfullyy updated"})
-
-    
-
+    return Response({"Status": "Successsfully updated"})

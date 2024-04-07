@@ -1,301 +1,244 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'panel_base.html' %}
+{% load static %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Attendance Panel - Dev Day '24</title>
-    <!-- Importing the Font Awesome Kit -->
-    <script src="https://kit.fontawesome.com/yourkit.js"></script>
-    <!-- External stylesheet link -->
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'adminPanelStyles.css' %}" />
-</head>
+{% block title %}
+  <title>Attendance Panel</title>
+{% endblock %}
 
-<body>
+{% block body %}
+  <div style="height: 25px;"></div>
 
-    <div style="height: 10px;"></div>
-
-    <!-- Added Nav Bar -->
-    <div class="navigator-wrapper">
-        <ul>
-            <li class="attendance-toggle"><a class="active">Attendance</a></li>
-            <li class="time-schedule-toggle"><a href="{% url 'portal:admin-panel-schedule' %}">Time Schedule</a></li>
-        </ul>
-    </div>
-
-    <!-- Logo for small screens -->
+  <!-- Search Bar -->
+  <form id="search-form">
     <div class="row">
-        <img class="logo-small-screen" src="{% static '/img/DD24_Logo_With_Tagline.png' %}" width="25%"></img>
+      <div class="search_field">
+        <svg xmlns="http://www.w3.org/2000/svg" class="svg_icon bi-search" viewBox="0 0 16 16">
+          <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
+        </svg>
+        <input id="search-input" type="text" class="input-attendance-search" placeholder="Search" />
+        <select id="search-competition" class="search-dropdown">
+          <option value="all_competitions">All Competitions</option>
+          {% for event in events %}
+            <option value="{{ event.competitionName }}">{{ event.competitionName }}</option>
+          {% endfor %}
+        </select>
+        <!-- Search button -->
+        <button type="submit" class="search-attendance-page">Search</button>
+      </div>
     </div>
-    <!-- Header -->
-    <div class="header-row" style="justify-content: space-between;">
+  </form>
 
-        <img class="logo-wide-screen" src="{% static '/img/DD24_Logo_With_Tagline.png' %}" width="25%"></img>
+  <!-- Dropdown and total indicator -->
+  <!-- Dropdown and total indicator -->
+  <div class="row">
+    <div class="search-details-row" style="justify-content: space-between">
+      <!-- <div class="container" style="width: 0%;"></div> -->
 
-        <div class="heading">
-            <h1>
-                Participant Attendance Admin Panel
-            </h1>
-        </div>
+      <button class="retrieve-all-button">Retrieve All Entries</button>
+      <!-- <div class="container" style="width: 0%;"></div> -->
 
-        <div class="header-spacing"></div>
+      <div class="total-records-indicator">Total: {{ count }}</div>
 
-        <div style="display:flex; width: 25%; height: 100%; justify-content: end; align-items: center;">
-            <div style="width: 100px; height: 100%;">
-                <form action="{% url 'portal:logout' %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit" class="logout-button">Logout</button>
-                </form>
-            </div>
-        </div>
-
+      <!-- <div class="container" style="width: 0%;"></div> -->
     </div>
+  </div>
 
-    <div style="height: 25px;"></div>
+  <div style="height: 5px;"></div>
 
-    <!-- Search Bar -->
-    <form id="search-form" method="POST" action="">
-        {% csrf_token %}
-        <div class="row">
-            <div class="search_field">
-                <svg xmlns="http://www.w3.org/2000/svg" class="svg_icon bi-search" viewBox="0 0 16 16">
-                    <path
-                        d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z">
-                    </path>
-                </svg>
-                <input id="search-input" type="text" class="input-attendance-search" placeholder="Search">
-                <select id="search-competition" class="search-dropdown">
-                    <option value="All competitions">All Competitions</option>
-                    {% for event in events %}
-                        <option value="{{event.competitionName}}">{{event.competitionName}}</option>
-                    {% endfor %}
-                </select>
-            </div>
-    
-        </div>
-        <!-- Search Button -->
-        <div class="row">
-            <button type="submit" class="search-button">Search</button>
-        </div>
-    </form>
+  <!-- Center and collapsed the table -->
 
-
-    <!-- Dropdown and total indicator -->
-    <div class="row">
-        <div class="row" style="justify-content: space-between; width: 80%;">
-
-            <!-- <div class="container" style="width: 0%;"></div> -->
-            <select name="competition" id="competition" style="width: 150px;"  onchange="getRecordDropDown(this)">
-                <option value="All Competitions">All Competitions</option>
-                {% for event in events %}
-                    <option value="{{event.competitionName}}">{{event.competitionName}}</option>
-                {% endfor %}
-            </select>
-        
-            <!-- <div class="container" style="width: 0%;"></div> -->
-    
-            <div class="total-records-indicator">
-                Total: {{count}}
-            </div>
-            <!-- <div class="container" style="width: 0%;"></div> -->
-        </div>
-    </div>
-
-
-    <div style="height: 5px;"></div>
-
-    <!-- Center and collapsed the table -->
-
-    <!-- Query table -->
-    <div class="table-container">
-        <table class="table">
-        <thead>
-            <tr>
-                <th>Team Name</th>
-                <th>Status</th>
-                <th>Competition</th>
-                <th>Member 1</th>
-                <th>Member 2</th>
-                <th>Member 3</th>
-                <!-- <th>Field 4</th>
-                <th>Field 6</th>
-                <th>Field 7</th> -->
-
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-            </tr>
-        </tbody>
-
-
+  <!-- Query table -->
+  <div class="table-container">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Team Name</th>
+          <th>Status</th>
+          <th>Competition</th>
+          <th>Leader Name</th>
+          <th>Member 1</th>
+          <th>Member 2</th>
+          <th>Member 3</th>
+          <th>Member 4</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr></tr>
+      </tbody>
     </table>
-    </div>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            fetch('/api/get_record/')
-                .then(response => response.json())
-                .then(data => {
-                    const tbody = document.querySelector('tbody');
-                    tbody.innerHTML=''
-                    data.forEach(item => {
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                            <td>${item.team_name}</td>
-                            <td><i class="fas fa-check-circle text-success"></i>
-                                <select name="attendance-dropdown" id="${item.team_name}" style="width: 110px;" onchange="updateAttendance(this)">
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById('search-form');
+        form.addEventListener('submit', (e) => {
+            searchEntires(e);
+        });
+
+        loadEntries();
+
+        document.querySelector(".retrieve-all-button").addEventListener("click", () => {
+            retrieveAllEntries();
+        });
+    });
+
+    function renderEntries(data) {
+        const tbody = document.querySelector('tbody');
+        tbody.innerHTML = '';
+        if (data.length == 0) {
+            loadMessage("No data found.", error=false);
+        }
+        else {
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                        <td>${item.Team_Name}</td>
+                        <td><i class="fas fa-check-circle text-success"></i>
+                            <form>
+                                {% csrf_token %}
+                                <select name="attendance-dropdown" id="${item.Team_Name}" style="width: 110px;" onchange="updateAttendance(this)">
                                     ${item.attendance == true ? `
                                         <option value="absent">Absent</option>
                                         <option value="present" selected>Present</option>
-                                    ` : `
+                                        ` : `
                                         <option value="absent" selected>Absent</option>
                                         <option value="present">Present</option>
-                                    `}  
-                            </select>
-                            <input type="hidden" name="team" value="${item.team_name}">
-                                </form>
-                            </td>
-                            <td>${item.comp_name}</td>
-                            <td>${item.leader_name}</td>
-                            <td>${item.p1_name}</td>
-                            <td>${item.p2_name}</td>
-                        `;
-                        tbody.appendChild(row);
-                    });
-                })
-                .catch(error => {
-                    console.error('Error fetching records:', error);
-                });
-        });
-        
+                                        `}  
+                                    </select>
+                            </form>
+                        </td>
+                        <td>${item.Competition}</td>
+                        <td>${item.Leader_name}</td>
+                        <td>${item.mem1_name}</td>
+                        <td>${item.mem2_name}</td>
+                        <td>${item.mem3_name}</td>
+                        <td>${item.mem4_name}</td>
+                    `;
+                tbody.appendChild(row);
+            });
+        }
+    }
+    function loadEntries() {
+        loadSpinner();
 
-    const form = document.getElementById('search-form');    
-    form.addEventListener('submit', async (e) => {
+        fetch('/api/get_record/')
+            .then(response => response.json())
+            .then(data => {
+                renderEntries(data);
+            })
+            .catch(error => {
+                loadMessage(message=error,error=true);
+                console.error('Error fetching records:', error);
+            });
+    }
+
+    function loadSpinner(){
+        const tbody = document.querySelector('tbody');
+        tbody.innerHTML = '';
+        const row = document.createElement('tr');
+        row.innerHTML = `
+        <td colspan="8">
+            <div class="loader-div">
+                <div class="loader"></div>
+                <div class="loader-text">Loading Data ...</div>
+            </div>
+        </td>
+        `;
+        tbody.appendChild(row);
+    }
+
+    function loadMessage(message, error=false){
+        const tbody = document.querySelector('tbody');
+        tbody.innerHTML = '';
+        const row = document.createElement('tr');
+        if (error === true)
+        {
+            row.innerHTML = `
+            <td colspan="8">
+                <div class="loader-div">
+                    <div class="loader-text" style="display: flex;"><div style="font-weight: 700; margin-right: 3px;">Error: </div>${message}</div>
+                </div>
+            </td>
+            `;
+        }
+        else{
+            row.innerHTML = `
+            <td colspan="8">
+                <div class="loader-div">
+                    <div class="loader-text">${message}</div>
+                </div>
+            </td>
+            `;
+        }
+        tbody.appendChild(row);
+    }
+
+    async function searchEntires(e) {
         e.preventDefault();
-    
-        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-        const searchValue = document.getElementById('search-input').value;
-        const competitionName= document.getElementById('search-competition').value
+        loadSpinner();
+
+        let searchValue = document.getElementById('search-input').value;
+        if (searchValue === "") {
+            searchValue = "all";
+        }
+        let competitionName = document.getElementById('search-competition').value
 
         try {
-            const response = await fetch('/api/post_record_search/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
-                },
-                body: JSON.stringify({ search: searchValue, competition: competitionName })
-            });
-            console.log(searchValue, "and" ,competitionName)
+            const response = await fetch(`/api/record_search/${competitionName}/${searchValue}/`);
             if (response.ok) {
                 const data = await response.json();
-                console.log(data, 'and', data.length)
-                const tbody = document.querySelector('tbody');
-                tbody.innerHTML = '';
-                data.forEach(item => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${item.team_name}</td>
-                        <td><i class="fas fa-check-circle text-success"></i>
-                            <select name="attendance-dropdown" id="${item.team_name}" style="width: 110px;" onchange="updateAttendance(this)">
-                                ${item.attendance == true ? `
-                                    <option value="absent">Absent</option>
-                                    <option value="present" selected>Present</option>
-                                ` : `
-                                    <option value="absent" selected>Absent</option>
-                                    <option value="present">Present</option>
-                                `}
-                            </select>
-                        </td>
-                        <td>${item.comp_name}</td>
-                        <td>${item.leader_name}</td>
-                        <td>${item.p1_name}</td>
-                        <td>${item.p2_name}</td>
-                    `;
-                    tbody.appendChild(row);
-                });    
+                renderEntries(data);
             } else {
+                loadMessage(message=response.statusText,error=true);
                 console.error('Error:', response.statusText);
             }
         } catch (error) {
+            loadMessage(message=error,error=true);
             console.error('Error:', error);
         }
-    });
+    }
 
     function updateAttendance(selectElement) {
         const teamName = selectElement.getAttribute('id');
-        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const csrfToken = selectElement.parentNode.childNodes[1].value
         const newStatus = selectElement.value;
 
         fetch('/api/update_attendance/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrfToken 
-        },
-        body: JSON.stringify({ team: teamName, status: newStatus })
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify({ team: teamName, status: newStatus })
         })
-       .then(response => {
-        if (response.ok) {
-            console.log('Attendance updated successfully.');
-        } else {
-            console.error('Error updating attendance:', response.statusText);
-        }
-        })
-        .catch(error => {
-        console.error('Error updating attendance:', error);
-        });
+            .then(response => {
+                if (response.ok) {
+                    alert('Attendance updated successfully.');
+                } else {
+                    alert('Error updating attendance:', response.statusText);
+                }
+            })
+            .catch(error => {
+                console.error('Error updating attendance:', error);
+            });
     }
 
-    async function getRecordDropDown(selectElement) {
-        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-        const competitionName = selectElement.value;
+    async function retrieveAllEntries() {
+        loadSpinner();
+        document.getElementById('search-input').value = "";
+        document.getElementById('search-competition').value = "all_competitions";
         try {
-            const response = await fetch('/api/post_record_dropdown/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
-                },
-                body: JSON.stringify({ competition : competitionName})
-            });
-
+            const response = await fetch(`/api/record_search/all_competitions/all/`);
             if (response.ok) {
                 const data = await response.json();
-                const tbody = document.querySelector('tbody');
-                tbody.innerHTML = '';
-                data.forEach(item => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${item.team_name}</td>
-                        <td><i class="fas fa-check-circle text-success"></i>
-                            <select name="attendance-dropdown" id="${item.team_name}" style="width: 110px;" onchange="updateAttendance(this)">
-                                ${item.attendance == true ? `
-                                    <option value="absent">Absent</option>
-                                    <option value="present" selected>Present</option>
-                                ` : `
-                                    <option value="absent" selected>Absent</option>
-                                    <option value="present">Present</option>
-                                `}
-                            </select>
-                        </td>
-                        <td>${item.comp_name}</td>
-                        <td>${item.leader_name}</td>
-                        <td>${item.p1_name}</td>
-                        <td>${item.p2_name}</td>
-                    `;
-                    tbody.appendChild(row);
-                });    
+                renderEntries(data);
             } else {
+                    loadMessage(response.statusText, error=true);
                 console.error('Error:', response.statusText);
             }
         } catch (error) {
-            console.error('Error:', error);
+                loadMessage(message=error, error=true);
+                console.error('Error:', error);
         }
     }
-
-    </script>
-</body>
-
-</html>
+  </script>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block extra_header %}
+  <link rel="stylesheet" href="{% static 'introStyles.css' %}" />
+  <style>
+    .d404 {
+      color: #003048;
+      text-align: center;
+      background-color: white;
+    }
+    .h404:hover {
+      color: #00a0bf;
+      transition: 0.2s all ease;
+    }
+    .h404 {
+      transition: 0.2s all ease;
+      font-size: 4rem;
+    }
+    .box {
+      background-color: #ffffff;
+      border-radius: 20px;
+      padding: 50px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      margin: 5rem 0;
+      max-width: 25rem;
+      min-width: 15rem;
+    }
+  </style>
+{% endblock %}
+{% block title %}
+  <title>404 Not Found</title>
+{% endblock %}
+{% block body %}
+  <div class="container" style="z-index: 1100;">
+    <div class="d404 box">
+      <div class="h404">404</div>
+      <div class="lead">Are you lost, little one?</div>
+    </div>
+  </div>
+{% endblock %}
