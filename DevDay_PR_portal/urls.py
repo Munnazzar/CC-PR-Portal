@@ -10,3 +10,4 @@ urlpatterns = [
 ]
 
 handler404 = "portal.views.page_not_found_404"
+handler403 = "portal.views.limit_exceeded_403"
