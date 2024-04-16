@@ -5,8 +5,9 @@ from mongoengine.errors import DoesNotExist
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import LoginForm
+from django_ratelimit.decorators import ratelimit
 
-
+@ratelimit(key='ip', rate='10/m', block=True)
 def loginPage(request):
     if request.user.is_authenticated:
         return redirect("portal:admin-panel")
@@ -56,4 +57,11 @@ def page_not_found_404(request, exception=404):
         request,
         "404.html",
         status=404,
+    )
+
+def limit_exceeded_403(request, exception=403):
+    return render(
+        request,
+        "403.html",
+        status=403,
     )
