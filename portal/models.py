@@ -1,36 +1,23 @@
 from django.contrib.auth.models import AbstractUser
 
-from mongoengine import Document, StringField, BooleanField, DateTimeField, IntField
+from mongoengine import Document, StringField, BooleanField, DateTimeField
 
 class DevDayAttendance(Document):
     consumerNumber = StringField(required=True)
     Team_Name = StringField(required=True)
     Leader_name = StringField(required=True)
     Leader_email = StringField(required=True)
-    Leader_whatsapp_number = StringField(required=True)
-    Leader_cnic = StringField(required=True)
-    mem1_name = StringField(required=True)
-    mem1_email = StringField(required=True)
-    mem1_whatsapp_number = StringField(required=True)
-    mem1_cnic = StringField(required=True)
-    mem2_name = StringField(required=True)
-    mem2_email = StringField(required=True)
-    mem2_whatsapp_number = StringField(required=True)
-    mem2_cnic = StringField(required=True)
-    mem3_name = StringField()
-    mem3_email = StringField()
-    mem3_whatsapp_number = StringField()
-    mem3_cnic = StringField()
-    mem4_name = StringField()
-    mem4_email = StringField()
-    mem4_whatsapp_number = StringField()
-    mem4_cnic = StringField()
-    fees_amount = IntField(required=True)
-    paid = BooleanField(required=True, default=False)  # Assigning a default value as per your document
-    reference_code = StringField(required=True)
+    mem1_name = StringField(default="")
+    mem1_email = StringField(default="")
+    mem2_name = StringField(default="")
+    mem2_email = StringField(default="")
+    mem3_name = StringField(default="")
+    mem3_email = StringField(default="")
+    mem4_name = StringField(default="")
+    mem4_email = StringField(default="")
+    att_code = StringField(required=True)
     Competition = StringField(required=True)
-    Competition_id = StringField(required=True)
-    Competition_type = StringField(required=True)
+    attendance = BooleanField(default=False)
 
 
 class Event(Document):
@@ -39,10 +26,41 @@ class Event(Document):
     end_time = DateTimeField(required=True)
 
 
-class Attendance(Document):
-    teamName = StringField(required=True)
-    attendanceStatus = BooleanField(default=False)
-
-
 class User(AbstractUser):
     pass
+
+competitions = {
+    "all_competitions": "all_competitions",
+    "Capture The Flag": "CF",
+    "Competitive Programming": "CP",
+    "Query Quest": "QQ",
+    "Code in Dark": "CD",
+    "PsuedoWar": "PW",
+    "Speed Debugging": "SD",
+    "UI/UX Design": "UX",
+    "Data Visualization": "DV",
+    "Web Dev": "WD",
+    "Data Science": "DS",
+    "AppDev": "AD",
+    "SyncOS Challenge": "SO",
+    "Code Sprint": "CS",
+    "Photography": "PH",
+    "Reels competition": "RE",
+    "Board games": "BG",
+    "Sketching Competition": "SK",
+    "Podium game": "PG",
+    "Scavenger hunt": "SH",
+    "Fast Stock Exchange": "FS",
+    "Robotics Competition": "RC",
+    "Line Following Robot (LFR) Competition": "LF",
+    "Robo Soccer Competition": "RS",
+    "Counter-Strike 2 (CS2)": "C2",
+    "Quiz competition":"QC"
+}
+
+def get_competition_name(competition_code):
+    print(competition_code)
+    for name, code in competitions.items():
+        if code == competition_code:
+            return name
+    return None  

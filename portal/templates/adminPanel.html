@@ -4,7 +4,9 @@
 {% block title %}
   <title>Attendance Panel</title>
 {% endblock %}
-
+{% block extra_header %}
+    <script src="{% static 'js/compCode.js' %}"></script>
+{% endblock %}
 {% block body %}
   <div style="height: 25px;"></div>
 
@@ -67,14 +69,16 @@
       </tbody>
     </table>
   </div>
+  <div class="pagination-div">
+      <div id="pagination-container"></div>
+    </div>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
         const form = document.getElementById('search-form');
         form.addEventListener('submit', (e) => {
             searchEntires(e);
         });
-
-        loadEntries();
+        loadEntries("/api/get_record/?page=1");
 
         document.querySelector(".retrieve-all-button").addEventListener("click", () => {
             retrieveAllEntries();
@@ -84,17 +88,19 @@
     function renderEntries(data) {
         const tbody = document.querySelector('tbody');
         tbody.innerHTML = '';
-        if (data.length == 0) {
+        if (data.count === 0) {
             loadMessage("No data found.", error=false);
         }
         else {
-            data.forEach(item => {
+            document.querySelector(".total-records-indicator").innerHTML=`Total: ${data.count}`;
+            data.results.forEach(item => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
                         <td>${item.Team_Name}</td>
                         <td><i class="fas fa-check-circle text-success"></i>
                             <form>
                                 {% csrf_token %}
+                                <input type="hidden" id="team_id" value=${item._id}>
                                 <select name="attendance-dropdown" id="${item.Team_Name}" style="width: 110px;" onchange="updateAttendance(this)">
                                     ${item.attendance == true ? `
                                         <option value="absent">Absent</option>
@@ -116,11 +122,17 @@
                 tbody.appendChild(row);
             });
         }
+        loadPaginationButtons(data)
     }
-    function loadEntries() {
+    function loadEntries(url) {
+        document.getElementById("pagination-container").innerHTML = "";
         loadSpinner();
-
-        fetch('/api/get_record/')
+        if (!url || typeof url !== 'string') {
+            console.error('Invalid URL:', url);
+            return;
+        }
+        
+        fetch(url)
             .then(response => response.json())
             .then(data => {
                 renderEntries(data);
@@ -130,7 +142,106 @@
                 console.error('Error fetching records:', error);
             });
     }
+    function loadPaginationButtons(data) {
+        // Get pagination container element
+        const paginationContainer = document.getElementById("pagination-container");
+        let url = data.next
+        if (url === null){
+            url = data.previous
+        }
+        function updatePageNumber(url, pageNumber) {
+            if   (url === null){
+                return null;
+            }
+            // Use a regular expression to replace the value of the 'page' parameter
+            return url.replace(/(\?|&)page=\d+/, `$1page=${pageNumber}`);
+        }
+    
+        function createButton(url, pageNumber) {
+            if (pageNumber < data.first_page) {
+                return
+            }
+            if(pageNumber > data.last_page) {
+                return
+            }
 
+            const button = document.createElement("button");
+            button.innerHTML = pageNumber;
+            button.classList.add("page-button");
+            if (pageNumber === data.current_page) {
+                button.classList.add("activePageBtn");
+            } else {
+                button.addEventListener('click', () => {
+                    new_url = updatePageNumber(url, pageNumber);
+                    if (new_url === null){
+                        return;
+                    }
+                    loadEntries(new_url);
+                });
+            }
+            paginationContainer.appendChild(button);
+        }
+        // Clear existing buttons
+        paginationContainer.innerHTML = "";
+    
+        // Create First Button
+        const firstBtn = document.createElement("button");
+        firstBtn.innerHTML = "First";
+        firstBtn.disabled = data.previous === null; // Disable if previous URL is null
+        if (data.previous !== null) {
+            firstBtn.addEventListener('click', () => {
+                loadEntries(updatePageNumber(url, data.first_page));
+            });
+        }
+        firstBtn.classList.add("page-button");
+        firstBtn.classList.add("first-button");
+        paginationContainer.appendChild(firstBtn);
+    
+        // Create Previous Button
+        const previousBtn = document.createElement("button");
+        previousBtn.innerHTML = "Previous";
+        previousBtn.disabled = data.previous === null; // Disable if previous URL is null
+        if (data.previous !== null) {
+            previousBtn.addEventListener('click', () => {
+                loadEntries(data.previous);
+            });
+        }
+        previousBtn.classList.add("page-button");
+        previousBtn.classList.add("previous-button");
+        paginationContainer.appendChild(previousBtn);
+        
+        
+        createButton(url, data.current_page - 1);
+        createButton(url, data.current_page);
+        createButton(url, data.current_page + 1);
+        
+    
+        // Create Next Button
+        const nextBtn = document.createElement("button");
+        nextBtn.innerHTML = "Next";
+        nextBtn.disabled = data.next === null; // Disable if next URL is null
+        if (data.next !== null) {
+            nextBtn.addEventListener('click', () => {
+                loadEntries(data.next);
+            });
+        }
+        nextBtn.classList.add("page-button");
+        nextBtn.classList.add("next-button");
+        paginationContainer.appendChild(nextBtn);
+    
+        // Create Last Button
+        const lastBtn = document.createElement("button");
+        lastBtn.innerHTML = "Last";
+        lastBtn.disabled = data.next === null; // Disable if next URL is null
+        if (data.next !== null) {
+            lastBtn.addEventListener('click', () => {
+                loadEntries(updatePageNumber(url, data.last_page));
+            });
+        }
+        lastBtn.classList.add("page-button");
+        lastBtn.classList.add("last-button");
+        paginationContainer.appendChild(lastBtn);
+    }
     function loadSpinner(){
         const tbody = document.querySelector('tbody');
         tbody.innerHTML = '';
@@ -180,10 +291,11 @@
         if (searchValue === "") {
             searchValue = "all";
         }
+        // Encode the competition name before appending it to the URL
         let competitionName = document.getElementById('search-competition').value
-
+        let competitionCode = getCompetitionCode(competitionName)
         try {
-            const response = await fetch(`/api/record_search/${competitionName}/${searchValue}/`);
+            const response = await fetch(`/api/record_search/${competitionCode}/${searchValue}/`);
             if (response.ok) {
                 const data = await response.json();
                 renderEntries(data);
@@ -198,7 +310,8 @@
     }
 
     function updateAttendance(selectElement) {
-        const teamName = selectElement.getAttribute('id');
+        const form = selectElement.parentElement;
+        const teamID = form.querySelector("#team_id").value;
         const csrfToken = selectElement.parentNode.childNodes[1].value
         const newStatus = selectElement.value;
 
@@ -208,7 +321,7 @@
                 'Content-Type': 'application/json',
                 'X-CSRFToken': csrfToken
             },
-            body: JSON.stringify({ team: teamName, status: newStatus })
+            body: JSON.stringify({ teamID: teamID, status: newStatus })
         })
             .then(response => {
                 if (response.ok) {

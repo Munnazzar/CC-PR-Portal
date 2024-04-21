@@ -119,9 +119,9 @@ body {
 }
 
 .alert-warning {
-  color: var(--bs-warning-text-emphasis)!important;
-  background-color: var(--bs-warning-bg-subtle)!important;
-  border-color: var(--bs-warning-border-subtle)!important;
+  color: var(--bs-warning-text-emphasis) !important;
+  background-color: var(--bs-warning-bg-subtle) !important;
+  border-color: var(--bs-warning-border-subtle) !important;
 }
 
 .alert {

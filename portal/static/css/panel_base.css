@@ -552,3 +552,46 @@ h1 {
 .up-btn:hover {
   cursor: pointer;
 }
+.pagination-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 0 2rem 0;
+}
+#pagination-container {
+  display: flex;
+}
+.activePageBtn {
+  background-color: #003b66 !important;
+  color: white;
+}
+.page-button{
+  padding: 10px 15px;
+  border: 1px solid #172b4d;
+  background-color: transparent;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+.page-button:hover:not(.activePageBtn) {
+  background-color: lightgray;
+  color: #172b4d;
+  transition: all 0.1s ease-in;
+}
+.first-button {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-right: none;
+}
+.last-button {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border-right: 1px solid;
+}
+.previous-button {
+  margin-right: 3px;
+  border-right: 1px solid #172b4d;
+}
+.next-button {
+  border-right: none;
+  margin-left: 3px;
+}
