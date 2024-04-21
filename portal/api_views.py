@@ -144,7 +144,7 @@ def record_search(request, competitionName, searchValue):
                 Team_Name__icontains=search_query, Competition=competition_query
             )
             if not records:
-                records = DevDayAttendance.objects.filter(Leader_name__icontains=search_query)
+                records = DevDayAttendance.objects.filter(Leader_name__icontains=search_query, Competition=competition_query)
     else:
         if competition_query == "all_competitions":
             records = DevDayAttendance.objects.all()
