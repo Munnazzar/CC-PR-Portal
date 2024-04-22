@@ -13,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "Ji3wq8a02#545az*04k34cGHKJFHKAFOyuahrf3829-u%zebb*_50wqx$6kmn3!x81x8(e=6gz4(^(4msdad6#355646^$#564cdx2i^3a5jp%_$6csf4fv8dsag4FbDFFGDSAkv54vdss"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 ALLOWED_HOSTS = [".herokuapp.com", "127.0.0.1", "admin.acmdevday.com"]
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
