@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser
 
 from mongoengine import Document, StringField, BooleanField, DateTimeField
 
+
 class DevDayAttendance(Document):
     consumerNumber = StringField(required=True)
     Team_Name = StringField(required=True)
@@ -29,6 +30,7 @@ class Event(Document):
 class User(AbstractUser):
     pass
 
+
 competitions = {
     "all_competitions": "all_competitions",
     "Capture The Flag": "CF",
@@ -41,26 +43,27 @@ competitions = {
     "Data Visualization": "DV",
     "Web Dev": "WD",
     "Data Science": "DS",
-    "AppDev": "AD",
     "SyncOS Challenge": "SO",
     "Code Sprint": "CS",
     "Photography": "PH",
     "Reels competition": "RE",
     "Board games": "BG",
-    "Sketching Competition": "SK",
-    "Podium game": "PG",
     "Scavenger hunt": "SH",
     "Fast Stock Exchange": "FS",
-    "Robotics Competition": "RC",
     "Line Following Robot (LFR) Competition": "LF",
     "Robo Soccer Competition": "RS",
     "Counter-Strike 2 (CS2)": "C2",
-    "Quiz competition":"QC"
+    "Sketching Competition": "SK",
+    "Quiz competition": "QC",
+    "Scrabble": "SC",
+    "Chess": "CH",
+    "Ludo": "LD",
 }
+
 
 def get_competition_name(competition_code):
     print(competition_code)
     for name, code in competitions.items():
         if code == competition_code:
             return name
-    return None  
+    return None
