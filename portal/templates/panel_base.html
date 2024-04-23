@@ -26,10 +26,10 @@
     {% if request.user.is_superuser %}
     <div class="navigator-wrapper">
       <ul>
-        <li class="attendance-toggle">
+        <li class="attendance-toggle line">
           <a class="active" href="{% url 'portal:admin-panel' %}">Attendance</a>
         </li>
-        <li class="time-schedule-toggle">
+        <li class="time-schedule-toggle line">
           <a href="{% url 'portal:admin-panel-schedule' %}">Time Schedule</a>
         </li>
       </ul>

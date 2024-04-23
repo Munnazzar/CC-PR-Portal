@@ -267,35 +267,31 @@ h1 {
   align-items: center;
   position: relative;
   width: 100%;
-  background-color: transparent;
-  border-radius: 10px;
-  overflow: hidden;
-  border: 1px solid #003b66;
-  box-shadow: 3px 3px 2px 0px #e2e2e2;
 }
 
 .search-dropdown {
-  padding: 9px;
-  border: none;
-  outline: none;
-  border-left: 1px solid #c4d1eb;
+  padding: 11.5px;
+  border: 1px solid #ccc;
   border-radius: 0px;
   width: 300px;
-  font-size: 15px;
+  box-shadow: 3px 3px 2px 0px #E2E2E2;
+  font-size: 16px;
   appearance: none;
 }
 
 .search-attendance-page {
-  padding: 9px;
+  display: block;
+  padding: 11.5px;
+  border: 1px solid #ccc;
   background-color: #003b66;
   color: white;
-  font-size: 15px;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  font-size: 16px;
   cursor: pointer;
-  width: 300px;
+  box-shadow: 3px 3px 2px 0px #E2E2E2;
+  width: 200px;
   appearance: none;
-  border: none;
-  outline: none;
-  height: 2.3rem;
 }
 
 .search-details-row {
@@ -337,17 +333,16 @@ h1 {
   width: 100%;
   padding-left: 35px;
   outline: none;
-  background: #ffffff;
+  background: #FFFFFF;
   color: #000000;
-  border: 1px solid #c4d1eb;
+  border: 1px solid #C4D1EB;
   border-radius: 10px;
-  box-shadow: 3px 3px 2px 0px #e2e2e2;
-  transition: 0.3s ease;
+  transition: .3s ease;
 }
 
 .input-schedule-search:focus {
-  background: #f2f2f2;
-  border: 1px solid #a5a5a5;
+  background: #F2F2F2;
+  border: 1px solid #A5A5A5;
 }
 
 .input-schedule-search::placeholder {
@@ -355,16 +350,19 @@ h1 {
 }
 
 .input-attendance-search {
-  font-size: 15px;
+  font-size: 18px;
   padding: 5px 10px;
-  height: 26px;
-  width: 100%;
-  padding-left: 39px;
+  height: 30px;
+  width: 70%;
+  padding-left: 35px;
   outline: none;
-  background: #ffffff;
+  background: #FFFFFF;
   color: #000000;
-  border: none;
-  transition: 0.3s ease;
+  border: 1px solid #C4D1EB;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  box-shadow: 3px 3px 2px 0px #E2E2E2;
+  transition: .3s ease;
 }
 
 .input-attendance-search:focus {
@@ -408,6 +406,70 @@ h1 {
 
 .header-spacing {
   width: 0px;
+}
+
+.infobutton {
+  height: 3rem;
+  width: 3rem;
+  background-color: white;
+  border-radius: 100%;
+  border: 2px dashed white;
+  align-self: flex-end;
+  cursor: pointer;
+}
+
+.infobox {
+  height: 7rem;
+  width: 23rem;
+  background-color: white;
+  border-radius: 10px;
+  border: 2px solid #003B66;
+  color: #003B66;
+  padding: 15px 15px;
+  align-self: flex-start;
+  display: none;
+}
+
+.infotooltip {
+  background-color: #003B66;
+  border-radius: 7.5px;
+  border: 2px solid #003B66;
+  color: white;
+  padding: 0px 15px;
+  width: 6rem;
+  align-self: flex-end;
+  margin: 0.5rem;
+  display: none;
+  text-align: center;
+  height: 1.25rem;
+}
+
+.dum {
+  bottom: 1rem;
+  position: fixed;
+  z-index: 1160;
+  right: 1rem;
+  display: flex;
+  flex-direction: column;
+  width: 28rem;
+}
+
+@media screen and (max-width: 500px) {
+
+  .infobutton {
+      width: 2rem;
+      height: 2rem;
+  }
+
+  .infobox {
+      width: 17rem;
+      height: 9rem;
+      font-size: 0.95rem
+  }
+
+  .dum {
+      width: 21rem;
+  }
 }
 
 @media screen and (max-width: 600px) {
