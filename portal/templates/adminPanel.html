@@ -14,17 +14,13 @@
   <form id="search-form">
     <div class="row">
       <div class="search_field">
-        <svg xmlns="http://www.w3.org/2000/svg" class="svg_icon bi-search" viewBox="0 0 16 16">
-          <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
-        </svg>
-        <input id="search-input" type="text" class="input-attendance-search" placeholder="Search" />
+        <input id="search-input" type="text" class="input-attendance-search" placeholder="Enter team or leader name" />
         <select id="search-competition" class="search-dropdown">
           <option value="all_competitions">All Competitions</option>
           {% for event in events %}
             <option value="{{ event.competitionName }}">{{ event.competitionName }}</option>
           {% endfor %}
         </select>
-        <!-- Search button -->
         <button type="submit" class="search-attendance-page">Search</button>
       </div>
     </div>
@@ -354,4 +350,24 @@
         }
     }
   </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", ()=>{
+        // JavaScript to change the button on small screens
+        window.addEventListener('resize', function () {
+            changeSearchButton();
+        });
+        changeSearchButton();
+    });
+
+    function changeSearchButton() {
+        var button = document.querySelector('.search-attendance-page');
+        if (window.innerWidth <= 600) {
+            button.innerHTML = '<i class="bi bi-search" style="color: white;font-size: 1.2rem;"></i>';
+        }
+        else{
+            button.innerHTML = 'Search';
+        }
+        return;
+    }
+    </script>
 {% endblock %}

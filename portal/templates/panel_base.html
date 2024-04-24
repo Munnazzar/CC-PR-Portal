@@ -7,9 +7,10 @@
     {% block title %}
       <title>Attendance Panel</title>
     {% endblock %}
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
 
     <link rel="shortcut icon" type="image/png" href="{% static 'img/logo.ico' %}" />
-
     {% block extra_header %}
 
     {% endblock %}
@@ -24,18 +25,18 @@
 
     <!-- Added Nav Bar -->
     {% if request.user.is_superuser %}
-    <div class="navigator-wrapper">
-      <ul>
-        <li class="attendance-toggle">
-          <a class="active" href="{% url 'portal:admin-panel' %}">Attendance</a>
-        </li>
-        <li class="time-schedule-toggle">
-          <a href="{% url 'portal:admin-panel-schedule' %}">Time Schedule</a>
-        </li>
-      </ul>
-    </div>
+      <div class="navigator-wrapper">
+        <ul>
+          <li class="attendance-toggle">
+            <a class="active" href="{% url 'portal:admin-panel' %}">Attendance</a>
+          </li>
+          <li class="time-schedule-toggle">
+            <a href="{% url 'portal:admin-panel-schedule' %}">Time Schedule</a>
+          </li>
+        </ul>
+      </div>
     {% endif %}
-    
+
     <!-- Logo for small screens -->
     <div class="row">
       <img class="logo-small-screen" src="{% static 'img/DD24_Logo_With_Tagline.png' %}" width="25%" />
@@ -53,9 +54,7 @@
 
       <div style="display:flex; width: 25%; height: 100%; justify-content: end; align-items: center;">
         <div style="width: 100px; height: 100%;">
-          <a href="{% url 'portal:logout' %}">
-            <button class="logout-button">Logout</button>
-          </a>
+          <a href="{% url 'portal:logout' %}"><button class="logout-button">Logout</button></a>
         </div>
       </div>
     </div>

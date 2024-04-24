@@ -268,7 +268,7 @@ h1 {
   position: relative;
   width: 100%;
   background-color: transparent;
-  border-radius: 10px;
+  border-radius: 6px;
   overflow: hidden;
   border: 1px solid #003b66;
   box-shadow: 3px 3px 2px 0px #e2e2e2;
@@ -280,22 +280,22 @@ h1 {
   outline: none;
   border-left: 1px solid #c4d1eb;
   border-radius: 0px;
-  width: 300px;
+  width: 9rem;
   font-size: 15px;
   appearance: none;
 }
 
 .search-attendance-page {
-  padding: 9px;
   background-color: #003b66;
   color: white;
   font-size: 15px;
   cursor: pointer;
-  width: 300px;
+  width: max-content;
   appearance: none;
   border: none;
   outline: none;
   height: 2.3rem;
+  padding: 0 1.5rem;
 }
 
 .search-details-row {
@@ -322,16 +322,17 @@ h1 {
 .search-button {
   padding: 10px;
   border: 1px solid #ccc;
-  border-radius: 10px;
   background-color: #003b66;
   color: white;
   font-size: 16px;
   cursor: pointer;
-  width: 100%;
+  width: 8rem;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
 }
 
 .input-schedule-search {
-  font-size: 18px;
+  font-size: 15px;
   padding: 5px 10px;
   height: 30px;
   width: 100%;
@@ -339,15 +340,13 @@ h1 {
   outline: none;
   background: #ffffff;
   color: #000000;
-  border: 1px solid #c4d1eb;
-  border-radius: 10px;
+  border: none;
   box-shadow: 3px 3px 2px 0px #e2e2e2;
   transition: 0.3s ease;
 }
 
 .input-schedule-search:focus {
   background: #f2f2f2;
-  border: 1px solid #a5a5a5;
 }
 
 .input-schedule-search::placeholder {
@@ -359,7 +358,6 @@ h1 {
   padding: 5px 10px;
   height: 26px;
   width: 100%;
-  padding-left: 39px;
   outline: none;
   background: #ffffff;
   color: #000000;
@@ -448,7 +446,7 @@ h1 {
   }
 
   table {
-    height: 45vh;
+    height: 70vh;
   }
 
   .navigator-wrapper {
@@ -467,10 +465,6 @@ h1 {
   }
 
   .search_field {
-    width: 80%;
-  }
-
-  .search-button {
     width: 80%;
   }
 
@@ -565,7 +559,7 @@ h1 {
   background-color: #003b66 !important;
   color: white;
 }
-.page-button{
+.page-button {
   padding: 10px 15px;
   border: 1px solid #172b4d;
   background-color: transparent;

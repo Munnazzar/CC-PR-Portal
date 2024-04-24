@@ -25,10 +25,10 @@
         <div style="padding: 0 5px;">
             <ul>
                 <li>
-                    Enter the name of the competition you want to search for in the provided search bar.
+                    For competition details, enter competition name in search bar.
                 </li>
                 <li>
-                    Leave the search bar empty to retrieve details for all competitions.
+                    Leave bar empty and hit enter for all competitions.
                 </li>
             </ul>
         </div>
@@ -42,14 +42,12 @@
         <svg xmlns="http://www.w3.org/2000/svg" class="svg_icon bi-search" viewBox="0 0 16 16">
           <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
         </svg>
-        <input id="schedule-search" class="input-schedule-search" type="text" placeholder="Search" />
+        <input id="schedule-search" class="input-schedule-search" type="text" placeholder="Enter competition name" />
+        <!-- Search Button -->
+          <button type="submit" class="search-button" onclick="getCompetitionTime()">Search</button>
       </div>
     </div>
 
-    <!-- Search Button -->
-    <div class="row">
-      <button type="submit" class="search-button" onclick="getCompetitionTime()">Search</button>
-    </div>
   </form>
   <!-- Query table -->
 
