@@ -275,27 +275,32 @@ h1 {
 }
 
 .search-dropdown {
-  padding: 9px;
+/*   padding: 9px; */
   border: none;
   outline: none;
   border-left: 1px solid #c4d1eb;
   border-radius: 0px;
-  width: 9rem;
+/*   width: 9rem; */
+  width: 80%;
   font-size: 15px;
   appearance: none;
+}
+
+.bi {
+  font-size: 0.8rem;
 }
 
 .search-attendance-page {
   background-color: #003b66;
   color: white;
-  font-size: 15px;
+/*   font-size: 15px; */
   cursor: pointer;
   width: max-content;
   appearance: none;
   border: none;
   outline: none;
   height: 2.3rem;
-  padding: 0 1.5rem;
+  padding: 0 1rem;
 }
 
 .search-details-row {
