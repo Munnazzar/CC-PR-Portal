@@ -52,7 +52,7 @@ a {
   font-weight: normal;
 }
 
-li {
+.line {
   display: inline;
   float: left;
   width: 40%;
