@@ -1,0 +1,21 @@
+databases:
+  - name: prdb
+    plan: free
+    databaseName: local
+    user: munnazzar
+
+services:
+  - type: web
+    plan: free
+    name: PR_PORTAL
+    runtime: python
+    buildCommand: "./build.sh"
+    startCommand: "python -m gunicorn mysite.asgi:application -k uvicorn.workers.UvicornWorker"    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: mysitedb
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: WEB_CONCURRENCY
+        value: 4

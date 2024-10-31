@@ -1,6 +1,7 @@
 from pathlib import Path
 from mongoengine import connect
 from portal.credentials import USERNAME, PASSWORD, DATABASE_HOST, DATABASE_NAME
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -16,7 +17,7 @@ SECRET_KEY = "Ji3wq8a02#545az*04k34cGHKJFHKAFOyuahrf3829-u%zebb*_50wqx$sq4496234
 DEBUG = True
 ALLOWED_HOSTS = ['*']
 SESSION_COOKIE_SECURE = False
-CSRF_COOKIE_SECURE = False 
+CSRF_COOKIE_SECURE = False
 SECURE_SSL_REDIRECT = False
 
 
@@ -121,6 +122,11 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "production_files/"
+if not DEBUG:    # Tell Django to copy static assets into a path called `staticfiles` (this is specific to Render)
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    # Enable the WhiteNoise storage backend, which compresses static files to reduce disk use
+    # and renames the files with unique names for each version to support long-term caching
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
