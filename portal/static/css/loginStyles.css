@@ -1,28 +1,38 @@
+body {
+  background: rgba(240, 240, 240, 0.8); /* Light background */
+  backdrop-filter: blur(10px); /* Blur effect */
+  margin: 0;
+  height: 100vh; /* Full viewport height */
+}
+
 .haha {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
+
 .container {
   width: 100%;
   z-index: 1000;
   display: flex;
   position: relative;
   align-items: center;
-  align-content: center;
   justify-content: center;
   max-height: max-content;
   min-height: 100vh;
 }
+
 .box {
-  background-color: #ffffff;
+  background: rgba(255, 255, 255, 0.7); /* Semi-transparent white */
   border-radius: 20px;
   padding: 50px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
   margin: 5rem 0;
   max-width: 25rem;
   min-width: 15rem;
+  backdrop-filter: blur(15px); /* Background blur effect */
 }
+
 .logo {
   width: 300px;
   float: 18em;
@@ -52,7 +62,15 @@
   border-radius: 5px;
   border: 1px solid #003048;
   box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.5); /* Slightly transparent background for input */
+  transition: border-color 0.3s ease; /* Smooth border transition */
 }
+
+.input-field:focus {
+  border-color: #00a0bf; /* Change border color on focus */
+  outline: none; /* Remove default outline */
+}
+
 .submit-button {
   width: 100%;
   padding: 10px;
@@ -63,6 +81,7 @@
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
+
 .submit-button:hover {
   background-color: #003048;
 }
@@ -75,7 +94,5 @@
   .login-box {
     padding: 40px;
   }
-  /* body{
-        overflow: auto;
-    } */
 }
+

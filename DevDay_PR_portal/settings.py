@@ -13,11 +13,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "Ji3wq8a02#545az*04k34cGHKJFHKAFOyuahrf3829-u%zebb*_50wqx$sq44962342a345%^^SDFSDF&@q4sdf358zf6kmn3!x81x8(e=6gz4(^(4msdad6#355646^$#564cdx2i^3a5jp%_$6csf4fv8dsag4FbDFFGDSAkv54vdss"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-ALLOWED_HOSTS = [".herokuapp.com", "127.0.0.1", "admin.acmdevday.com"]
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SECURE_SSL_REDIRECT = True
+DEBUG = True
+ALLOWED_HOSTS = ['*']
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False 
+SECURE_SSL_REDIRECT = False
 
 
 INSTALLED_APPS = [
@@ -73,7 +73,17 @@ DATABASES = {
 }
 
 # Secondary Database
-connect(host=f"mongodb+srv://{USERNAME}:{PASSWORD}@{DATABASE_HOST}/{DATABASE_NAME}")
+
+
+# MongoEngine connection settings
+
+
+connect(
+    db=DATABASE_NAME,
+    username=USERNAME,
+    password=PASSWORD,
+    host=f"mongodb+srv://{USERNAME}:{PASSWORD}@{DATABASE_HOST}/{DATABASE_NAME}?retryWrites=true&w=majority"
+)
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators

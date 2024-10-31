@@ -1,28 +1,25 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    {% block title %}
-      <title>Developer Day</title>
-    {% endblock %}
-    <link rel="shortcut icon" type="image/png" href="{% static 'img/logo.ico' %}" />
-
-    {% block extra_header %}
-
-    {% endblock %}
-    <link rel="stylesheet" href="{% static 'css/base.css' %}" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@400;700&display=swap" />
-  </head>
-  <body>
-    <div class="background-text">
-      <span>DREAM DELIVER</span>
-      <span>DEVELOP</span>
-    </div>
-    {% block body %}
-
-    {% endblock %}
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  {% block title %}
+    <title>Coders Cup</title>
+  {% endblock %}
+  <link rel="shortcut icon" type="image/png" href="{% static 'img/coders-cup-logo.png' %}" />
+  {% block extra_header %}
+  {% endblock %}
+  <link rel="stylesheet" href="{% static 'css/base.css' %}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" />
+</head>
+<body>
+  <div class="background-text">
+    <span>CODERS CUP</span>
+  </div>
+  {% block body %}
+  {% endblock %}
+</body>
 </html>
+

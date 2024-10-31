@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-  <title>DevDay Login</title>
+  <title>Coders Cup Login</title>
 {% endblock %}
 
 {% block extra_header %}
@@ -13,7 +13,7 @@
   <div class="container">
     <div class="box">
       <div class="haha">
-        <img src="{% static '/img/DD24_Logo_With_Tagline.png' %}" alt="DevDay Logo" class="logo" />
+        <img src="{% static '/img/coders-cup-logo.png' %}" alt="DevDay Logo" class="logo" />
         <h2 class="login-heading">Login</h2>
       </div>
       <form action="{% url 'portal:login-page' %}" method="POST">

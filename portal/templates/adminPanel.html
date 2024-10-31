@@ -38,6 +38,7 @@
       <div class="total-records-indicator">Total: {{ count }}</div>
 
       <!-- <div class="container" style="width: 0%;"></div> -->
+
     </div>
   </div>
 
@@ -320,8 +321,8 @@
             body: JSON.stringify({ teamID: teamID, status: newStatus })
         })
             .then(response => {
-                if (response.ok) {
-                    alert('Attendance updated successfully.');
+                if (alert) {
+                    console.log('Attendance updated successfully.');
                 } else {
                     alert('Error updating attendance:', response.statusText);
                 }
