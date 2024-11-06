@@ -23,7 +23,7 @@ body {
 }
 
 .box {
-  background: rgba(255, 255, 255, 0.7); /* Semi-transparent white */
+  background: rgba(255, 255, 255, 0.3); /* Increase transparency */
   border-radius: 20px;
   padding: 50px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
@@ -33,6 +33,7 @@ body {
   backdrop-filter: blur(15px); /* Background blur effect */
 }
 
+
 .logo {
   width: 300px;
   float: 18em;
@@ -40,7 +41,7 @@ body {
 }
 
 .login-heading {
-  color: #003048;
+  color: #f1faff;
   margin-top: -10px;
 }
 
@@ -49,7 +50,7 @@ body {
 }
 
 .label {
-  color: #003048;
+  color: #e6e6e6;
   display: block;
   margin-bottom: 5px;
   align-items: center;
